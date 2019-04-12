@@ -234,13 +234,10 @@ class ExactInference(InferenceModule):
                 allPossible[newPos] += prob*self.beliefs[oldPos]
         #now update beliefs
         self.beliefs=allPossible
-                
-
-    
-    
     
     def getBeliefDistribution(self):
         return self.beliefs
+
 
 class ParticleFilter(InferenceModule):
     """
@@ -257,7 +254,6 @@ class ParticleFilter(InferenceModule):
 
     def setNumParticles(self, numParticles):
         self.numParticles = numParticles
-
 
     def initializeUniformly(self, gameState):
         """
@@ -330,7 +326,6 @@ class ParticleFilter(InferenceModule):
 
                 self.particles = t
 
-
     def elapseTime(self, gameState):
         """
         Update beliefs for a time step elapsing.
@@ -346,7 +341,12 @@ class ParticleFilter(InferenceModule):
         a belief distribution.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        tmp = []
+        for oldPos in self.particles:
+            newPosDist = self.getPositionDistribution(self.setGhostPosition(gameState, oldPos))
+            tmp.append(util.sample(newPosDist))
+
+        self.particles = tmp
 
     def getBeliefDistribution(self):
         """
@@ -361,6 +361,7 @@ class ParticleFilter(InferenceModule):
             distribution[element] = distribution[element] + 1
         distribution.normalize()
         return distribution
+
 
 class MarginalInference(InferenceModule):
     """
